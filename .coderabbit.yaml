@@ -27,7 +27,8 @@ reviews:
       instructions: >
         Review JavaScript and React code for clarity, performance, potential
         bugs, and best practices. Provide concise suggestions without being 
-        overly nitpicky.
+        overly nitpicky. Generate a sequence diagram that illustrates the flow 
+        between components, functions, or API calls.
 
 auto_review:
   enabled: true
