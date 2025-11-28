@@ -5,15 +5,32 @@ import gsap from "gsap";
 import { dockApps } from '#constants'
 import { useGSAP } from '@gsap/react';
 
+const MAGNIFICATION_SPREAD = 500;
+
+/**
+ * Dock Component - macOS-style application dock with hover magnification
+ * Features: Icon scaling/jumping on hover, tooltips, app launching
+ */
 const Dock = () => {
   const dockRef = useRef(null);
 
+  // === GSAP Animation Setup ===
   useGSAP(() => {
     const dock = dockRef.current;
     if (!dock) return;
 
     const icons = dock.querySelectorAll(".dock-icon");
 
+    // Pre-compile GSAP animations for better performance
+    icons.forEach((icon) => {
+      icon._quickScale = gsap.quickTo(icon, "scale", {duration: 0.2, ease: "power1.out"});
+      icon._quickY = gsap.quickTo(icon, "y", {duration: 0.2, ease: "power1.out"});
+      icon._quickScaleReset = gsap.quickTo(icon, "scale", {duration: 0.3, ease: "power1.out"});
+      icon._quickYReset = gsap.quickTo(icon, "y", {duration: 0.3, ease: "power1.out"});
+    });
+
+    // === Magnification Animation ===
+    // Calculates and applies scaling/position based on mouse proximity
     const animateIcons = (mouseX) => {
         const { left } = dock.getBoundingClientRect();
 
@@ -22,32 +39,28 @@ const Dock = () => {
             const center = iconLeft - left + width / 2;
             const distance = Math.abs(mouseX - center);
 
-            const intensity = Math.exp(-(distance ** 2) / 500);
+            const intensity = Math.exp(-(distance ** 2) / MAGNIFICATION_SPREAD);
 
-            gsap.to(icon, {
-                scale: 1 + 0.20 * intensity,
-                y: -15 * intensity, 
-                duration: 0.2,
-                ease: "power1.out",
-            })
+            // Use pre-compiled quickTo setters for better performance
+            icon._quickScale(1 + 0.20 * intensity);
+            icon._quickY(-15 * intensity);
         })
     };
 
+    // === Event Handlers ===
+    // Converts mouse position to dock-relative coordinates
     const handleMouseMove = (e) => {
         const { left } = dock.getBoundingClientRect();
 
         animateIcons(e.clientX - left);
     };
 
+    // Returns all icons to default state when mouse leaves dock
     const resetIcons = () => 
-        icons.forEach((icon) => 
-            gsap.to(icon, {
-                scale: 1, 
-                y: 0, 
-                duration: 0.3, 
-                ease: "power1.out",
-        }),
-    );
+        icons.forEach((icon) => {
+            icon._quickScaleReset(1);
+            icon._quickYReset(0);
+        });
     
     dock.addEventListener('mousemove', handleMouseMove);
     dock.addEventListener('mouseleave', resetIcons);
@@ -58,7 +71,8 @@ const Dock = () => {
     };
   }, []);
 
-
+  // === App Interaction ===
+  // Handles opening/closing applications (placeholder for future windows)
   const toggleApp = (app) => {
     //TODO Implemment Open Window Logic
   }
