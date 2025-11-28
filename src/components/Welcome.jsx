@@ -33,6 +33,9 @@ const setupTextHover = (container, type) => {
             ease: 'power2.out',
             fontVariationSettings: `'wght' ${weight}`,
         });
+        // letter -  the target we want to animate
+        // {} - what we want to do to the target; how we want to animate the target.
+
     };
 
     const handleMouseMove = (e) => {
@@ -58,9 +61,6 @@ const setupTextHover = (container, type) => {
         container.removeEventListener("mouseleave", handleMouseLeave);
     }
 };
-
-// letter -  the target we want to animate
-// {} - what we want to do to the target; how we want to animate the target.
 
 const Welcome = () => {
     const titleRef = useRef(null);
