@@ -1,0 +1,51 @@
+language: "en"
+early_access: false
+
+reviews:
+  request_changes_workflow: true
+  high_level_summary: true
+  poem: false
+  review_status: true
+  collapse_walkthrough: false
+
+  # Ignore unnecessary files (saves tokens & avoids spam)
+  path_filters:
+    - "!**/*.xml"
+    - "!**/__generated__/**"
+    - "!**/generated/**"
+    - "!**/*.json"
+    - "!**/*.svg"
+    - "!**/*.png"
+    - "!**/*.jpg"
+    - "!**/*.gif"
+    - "!**/*.lock"
+    - "!**/*.md"          # optional — skip README/markdown
+
+  # Focus review on React + JS only
+  path_instructions:
+    - path: "**/*.{js,jsx}"
+      instructions: >
+        Review JavaScript and React code for clarity, performance, potential
+        bugs, and best practices. Provide concise suggestions without being 
+        overly nitpicky. Generate a sequence diagram that illustrates the flow 
+        between components, functions, or API calls.
+
+auto_review:
+  enabled: true
+
+  # Ignore these PRs when in draft or WIP
+  ignore_title_keywords:
+    - "WIP"
+    - "DO NOT MERGE"
+    - "DRAFT"
+
+  drafts: false
+
+  # Auto-review these branches as PR targets
+  base_branches:
+    - "main"
+    - "dev"
+    - "release/.*"
+
+chat:
+  auto_reply: true
