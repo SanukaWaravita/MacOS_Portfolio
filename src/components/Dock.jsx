@@ -4,7 +4,7 @@ import gsap from "gsap";
 
 import { dockApps } from '#constants'
 import { useGSAP } from '@gsap/react';
-import useWindowStore from '#store/Window';
+import useWindowStore from '#store/window';
 
 const MAGNIFICATION_SPREAD = 500;
 
