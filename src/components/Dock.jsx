@@ -4,6 +4,7 @@ import gsap from "gsap";
 
 import { dockApps } from '#constants'
 import { useGSAP } from '@gsap/react';
+import useWindowStore from '#store/Window';
 
 const MAGNIFICATION_SPREAD = 500;
 
@@ -12,6 +13,9 @@ const MAGNIFICATION_SPREAD = 500;
  * Features: Icon scaling/jumping on hover, tooltips, app launching
  */
 const Dock = () => {
+
+  const { openWindow, closeWindow, windows } = useWindowStore();
+
   const dockRef = useRef(null);
 
   // === GSAP Animation Setup ===
@@ -74,8 +78,21 @@ const Dock = () => {
   // === App Interaction ===
   // Handles opening/closing applications (placeholder for future windows)
   const toggleApp = (app) => {
-    //TODO Implemment Open Window Logic
-  }
+    if(!app.canOpen) return;
+
+    const window = windows[app.id];
+
+    if(!window) {
+      console.error(`Window not found for app: ${app.id}`);
+      return;
+    }
+
+    if(window.isOpen) {
+      closeWindow(app.id);
+    } else {
+      openWindow(app.id);
+    }
+  };
 
   return (
     <section id="dock">
